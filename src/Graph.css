@@ -1,4 +1,8 @@
+/* Add any styles you want to apply to the perspective-viewer element */
 perspective-viewer {
-  height: 50vh;
-  width: 700px;
+  width: 100%; /* Adjust the width as needed */
+  height: 400px; /* Adjust the height as needed */
+  margin: 0 auto; /* Center the graph horizontally */
+  border: 1px solid #ccc; /* Add a border for better visibility */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
 }

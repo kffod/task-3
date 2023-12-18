@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Table } from '@finos/perspective';
 import { ServerRespond } from './DataStreamer';
-import { DataManipulator } from './DataManipulator';
+import { DataManipulator, Row } from './DataManipulator';
 import './Graph.css';
 
 // Declare the custom element for TypeScript
@@ -31,14 +31,13 @@ class Graph extends Component<IProps, {}> {
   componentDidMount() {
     const elem = document.getElementsByTagName('perspective-viewer')[0] as unknown as PerspectiveViewerElement;
 
+    // Modify the schema to include the new fields (ratio, upper_bound, lower_bound, trigger_alert)
     const schema = {
-      price_abc: 'float',
-      price_def: 'float',
       ratio: 'float',
-      timestamp: 'date',
       upper_bound: 'float',
       lower_bound: 'float',
       trigger_alert: 'float',
+      timestamp: 'date',
     };
 
     if (window.perspective && window.perspective.worker()) {
@@ -50,8 +49,7 @@ class Graph extends Component<IProps, {}> {
       elem.setAttribute('row-pivots', '["timestamp"]');
       elem.setAttribute('columns', '["ratio","lower_bound","upper_bound","trigger_alert"]');
       elem.setAttribute('aggregates', JSON.stringify({
-        price_abc: 'avg',
-        price_def: 'avg',
+        ratio: 'avg',
         timestamp: 'distinct count',
         upper_bound: 'avg',
         lower_bound: 'avg',
@@ -62,8 +60,9 @@ class Graph extends Component<IProps, {}> {
 
   componentDidUpdate() {
     if (this.table) {
-      const rows = DataManipulator.generateRow(this.props.data);
-      const updateDataString = JSON.stringify(rows);
+      // Generate a single row representing the combined information
+      const row = DataManipulator.generateRow(this.props.data);
+      const updateDataString = JSON.stringify([row]);
       this.table.update(updateDataString);
     }
   }
